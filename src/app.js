@@ -3,6 +3,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
+const userRoutes = require('./routes/user.route');
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -14,5 +15,5 @@ app.use((req, res, next) => {
 	res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
 	next();
 });
-
+app.use('/twitter',userRoutes);
 module.exports = app;
