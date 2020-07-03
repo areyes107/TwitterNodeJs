@@ -34,7 +34,7 @@ const signUp = async (args) =>{
         }
     }catch(err){
         console.log(err);
-        return {message: "Error interno en el servidor"};
+        return {message: "Error en el servidor"};
     }
 }
 
@@ -56,6 +56,97 @@ const login = async (args) =>{
         }
     }catch(err){
         console.log(err);
-        return {message: "Error interno en el servidor"};
+        return {message: "Error en el servidor"};
     }
 }
+
+const addTweet = async (user, args)=>{
+
+    try {
+       let tweet = new Tweet();
+       tweet.creator = user.sub;
+       tweet.date = new Date();
+       tweet.content = args[0];
+
+       const tweetAdded = await tweet.save();
+       if(!tweetAdded){
+           return {message: "Error al añadir el nuevo tweet"};
+
+       }else{
+           return {message: "Este es el tweet: " + tweetAdded};
+       }
+    }catch(err){
+        console.log(err);
+        return {message: "Error en el servidor"}    
+    }
+}
+
+const switchUpdateDelete = async (user, args, operation) => {
+    try {
+      let resultTweet;
+      let tweetFound;
+      if (operation === 0) {
+          tweetFound = await Tweet.findById(args[1]);
+      }else {
+          tweetFound = await Tweet.findById(args[0]);
+        }
+  
+      if (!tweetFound) {
+          return { message: "Este tweet no existe" };
+      }else {
+        if (String(user.sub) !== String(tweetFound.creator)) {
+          return { message: " Lo sentimos, no tienes acceso a este tweet" };
+        } else {
+          if (operation === 0) {
+            resultTweet = await Tweet.findByIdAndUpdate(
+              args[1],
+              { content: args[0] },
+              { new: true }
+            );
+          } else {
+            resultTweet = await Tweet.findByIdAndRemove(args[0]);
+          }
+          if (!resultTweet){
+            return { message: "Ha ocurrido un error, intenta de nuevo mas tarde" };
+          }else {
+            if (operation === 0) {
+                return resultTweet;
+            }else{
+                return { message: "Tweet eliminado" };
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      return { message: "Error en el servidor" };
+    }
+  };
+
+  const viewTweets = async (args) => {
+    try {
+      const userFind = await User.findOne({ username: args[0] });
+      if (!userFind)
+        return { message: "Este usuario no existe" };
+      else {
+        const tweets = await Tweet.find({ creator: userFind._id }).populate(
+          "creator",
+          "-_id username"
+        );
+        if (!tweets){ 
+            return { message: "Imposible obtener los tweets" };
+        }else if (tweets.length === 0){
+          return { message: `${userFind.username} aún no tienen ningún tweet.` };
+        }else{
+            return tweets;
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      return { message: "Erroe en el servidor" };
+    }
+  };
+
+  module.exports = {
+    commands
+  }
