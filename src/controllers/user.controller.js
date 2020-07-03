@@ -1,16 +1,16 @@
-const bcrypt = require('bcrypt-nodejs');
+const bcrypt = require('bcrypt');
 const User = require('../models/user.model');
 const Tweet = require('../models/tweet.model');
 const jwt = require('../services/jwt');
-const twitterCommand = require('twitter-command');
+const TwitterCommand = require('twitter-command');
 
 
-const signUp = async (args) =>{
+const signUp = async (args) => {
     const user = User();
 
     try{
         let userExists = await User.findOne({
-            $or: [{email: args[1]}, {username: args[2]}]
+            $or: [{email: args[1]}, {username: args[2]}],
         });
         if(userExists){
             return {message: "El usuario ya existe"};
@@ -37,12 +37,12 @@ const signUp = async (args) =>{
         console.log(err);
         return {message: "Error en el servidor"};
     }
-}
+};
 
 const login = async (args) =>{
     try{
         const userFind = await User.findOne({
-            $or: [{username: args[0]}, {email: args[1]}]
+            $or: [{ username: args[0] }, { email: args[0] }],
         });
 
         if(!userFind){
@@ -50,16 +50,17 @@ const login = async (args) =>{
 
         }else{
             const correctPassword = await bcrypt.compare(args[1], userFind.password);
-
             if(!correctPassword){
-                return {token: jwt.createToken(userFind)}; 
+                return {message: 'Contraseña incorrecta'};
+            }else{
+                return { token: jwt.createToken(userFind) }; 
             }
         }
     }catch(err){
         console.log(err);
         return {message: "Error en el servidor"};
     }
-}
+};
 
 const addTweet = async (user, args)=>{
 
@@ -235,7 +236,7 @@ const updateOrDelete = async (user, args, operation) => {
         return { message: "Invalid arguments" };
       }else {
         switch (command.toLowerCase()) {
-          case "signUp":
+          case "register":
             return await signUp(args);
             break;
           case "login":
@@ -270,8 +271,9 @@ const updateOrDelete = async (user, args, operation) => {
   };
 
   const commands = async (req, res) => {
+    
     try {
-      res.send(await mapAction(req.user, twitterCommand(req)));
+      res.send(await mapAction(req.user, TwitterCommand.getAction(req)));
     } catch (err) {
       console.log(err);
       res.status(500).send({ message: "Error en el servidor" });
