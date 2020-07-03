@@ -1,11 +1,11 @@
 "use strict";
 const jwt = require('jwt-simple');
 const moment = require('moment');
-const  needsMiddleware  = require('twitter-command');
-const key = "clave_super_hiper_mega_secreta";
+var  middleware  = require('twitter-command');
+const key = "12345";
 
 exports.ensureAuth = (req, res, next) => {
-  if (needsMiddleware(req)) {
+  if (middleware.needsMiddleware(req)) {
     if (!req.headers.authorization) {
       return res.status(403).send({ message: "Petición no autorizada" });
     } else {
