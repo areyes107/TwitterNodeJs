@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt-nodejs');
 const User = require('../models/user.model');
 const Tweet = require('../models/tweet.model');
+const jwt = require('../services/jwt')
 const ExpiredToken = require ('jwt-simple-error-identify').ExpiredToken;
 
 const signUp = async (args) =>{
