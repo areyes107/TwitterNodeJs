@@ -1,8 +1,9 @@
 const bcrypt = require('bcrypt-nodejs');
 const User = require('../models/user.model');
 const Tweet = require('../models/tweet.model');
-const jwt = require('../services/jwt')
-const ExpiredToken = require ('jwt-simple-error-identify').ExpiredToken;
+const jwt = require('../services/jwt');
+const twitterCommand = require('twitter-command');
+
 
 const signUp = async (args) =>{
     const user = User();
@@ -81,7 +82,7 @@ const addTweet = async (user, args)=>{
     }
 }
 
-const switchUpdateDelete = async (user, args, operation) => {
+const updateOrDelete = async (user, args, operation) => {
     try {
       let resultTweet;
       let tweetFound;
@@ -181,7 +182,101 @@ const switchUpdateDelete = async (user, args, operation) => {
     }
   };
 
+  const unfollowUser = async (user, args) => {
+    try {
+      const unfollow = await User.findOne({ username: args[0] });
+      if (!unfollow)
+        return { message: "Este usuario no existe" };
+      else {
+        const following = await User.findOne({
+          $and: [{ _id: user.sub }, { following: { _id: unfollow._id } }],
+        });
+        if (!following)
+          return { message: `No estás siguiendo a: ${unfollow.username}` };
+        else {
+          const stopFollowing = await User.findByIdAndUpdate(
+            user.sub,
+            { $pull: { following:unfollow._id } },
+            { new: true },
+          ).populate("following", "-following -password -followers -name -email")
+           .select("username");
   
+          const removeFollower = await User.findByIdAndUpdate(unfollow._id, {
+            $pull: { followers:user.sub  },
+          });
+  
+          if (stopFollowing && removeFollower) {
+            return stopFollowing;
+          } else {
+            return { message: `Error al intentar de seguir a: ${unfollow.username}` };
+          }
+        }
+      }
+    } catch (err) {
+      console.log(typeof err);
+      return { message: "Error en el servidor" };
+    }
+  };
+
+  const generatePassword = async (password) => {
+    return await new Promise((res, rej) => {
+      bcrypt.hash(password, 10, (err, hash) => {
+        if (err) rej(err);
+        res(hash);
+      });
+    });
+  };
+
+  const mapAction = async (user, { command, args }) => {
+    try {
+      if (command === "invalid command") {
+          return { message: "Invalid command" };
+      }else if (args === "invalid arguments"){
+        return { message: "Invalid arguments" };
+      }else {
+        switch (command.toLowerCase()) {
+          case "signUp":
+            return await signUp(args);
+            break;
+          case "login":
+            return await login(args);
+            break;
+          case "add_tweet":
+            return await addTweet(user, args);
+            break;
+          case "edit_tweet":
+            return await updateOrDelete(user, args, 0);
+            break;
+          case "delete_tweet":
+            return await updateOrDelete(user, args, 1);
+            break;
+          case "view_tweets":
+            return await viewTweets(args);
+            break;
+          case "follow":
+            return await followUser(user, args);
+            break;
+          case "unfollow":
+            return await unfollowUser(user, args);
+            break;
+          default:
+            return { message: "Invalid command try again" };
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      return err;
+    }
+  };
+
+  const commands = async (req, res) => {
+    try {
+      res.send(await mapAction(req.user, twitterCommand(req)));
+    } catch (err) {
+      console.log(err);
+      res.status(500).send({ message: "Error en el servidor" });
+    }
+  };
 
   module.exports = {
     commands
