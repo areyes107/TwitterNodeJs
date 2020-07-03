@@ -147,6 +147,42 @@ const switchUpdateDelete = async (user, args, operation) => {
     }
   };
 
+
+  const followUser = async (user, args) => {
+    try {
+      const follow = await User.findOne({ username: args[0] });
+      if (!follow)
+        return { message: "Este usuario no existe" };
+      else {
+        const alreadyFollowed = await User.findOne({
+          $and: [{ _id: user.sub }, { following: { _id: follow._id } }],
+        });
+        if (alreadyFollowed)
+          return { message: `ya sigues a: ${follow.username}` };
+        else {
+          const addfollowing = await User.findByIdAndUpdate(
+            user.sub,
+            { $push: { following: follow } },
+            { new: true }
+          ).populate("following", "-password -following -followers -name -email");
+          const addFollower = await User.findByIdAndUpdate(follow._id, {
+            $push: { followers: user.sub },
+          });
+          if (addFollowing && addFollower) {
+            return addFollowing;
+          } else {
+            return { message: `Error al intentar seguir a:  ${follow.username}` };
+          }
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      return { message: "Error en el servidor" };
+    }
+  };
+
+  
+
   module.exports = {
     commands
   }
