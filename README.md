@@ -9,39 +9,39 @@ Twitter created with NodeJs
 
 ```
 *********************************************
--Agregar Tweet:
-    add_tweet [texto del tweet]
-        add_tweet [hola mi nombre es Juan Pérez]
+-Agregar Tweet: <br/>
+    add_tweet [texto del tweet] <br/>
+        add_tweet [hola mi nombre es Juan Pérez] <br/>
 *********************************************
--Borrar Tweet
-    delete_tweet idTweet
-        delete_tweet 5effc4e908da401584c58ea4
+-Borrar Tweet <br/>
+    delete_tweet idTweet <br/>
+        delete_tweet 5effc4e908da401584c58ea4 <br/>
 *********************************************
--Editar tweet
-    edit_tweet idTweet [texto del tweet editado]
-        edit_tweet 5effc4e908da401584c58ea4 [Hola, ahora me llamo Daniel Díaz]
+-Editar tweet <br/>
+    edit_tweet idTweet [texto del tweet editado] <br/>
+        edit_tweet 5effc4e908da401584c58ea4 [Hola, ahora me llamo Daniel Díaz] <br/>
 *********************************************
--Ver los tweets de un usuario
-    view_tweets username
-        view_tweets jperez
+-Ver los tweets de un usuario <br/>
+    view_tweets username <br/>
+        view_tweets jperez <br/>
 *********************************************
--Seguir a alguién
-    follow username
-        follow jperez
+-Seguir a alguién <br/>
+    follow username <br/>
+        follow jperez <br/>
 *********************************************
--dejar de seguir a alguién
-    unfollow username
-        unfollow jperez
+-dejar de seguir a alguién <br/>
+    unfollow username <br/>
+        unfollow jperez <br/>
 *********************************************
--Mostrar un perfil
-    profile username
-        profile jperez
+-Mostrar un perfil <br/>
+    profile username <br/>
+        profile jperez <br/>
 *********************************************
--Registrar un usuario en twitter
-    register [name or names] email username password
-        register [Juan Pérez] jperez@gmail.com jperez 12345
+-Registrar un usuario en twitter <br/>
+    register [name or names] email username password <br/>
+        register [Juan Pérez] jperez@gmail.com jperez 12345 <br/>
 *********************************************
--Acceder con un usuario a twitter
-    login username password
-        login jperez 12345
+-Acceder con un usuario a twitter <br/>
+    login username password <br/>
+        login jperez 12345 <br/>
 *********************************************
