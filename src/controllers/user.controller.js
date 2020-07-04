@@ -219,6 +219,19 @@ const updateOrDelete = async (user, args, operation) => {
     }
   };
 
+  const showProfile = async (user, args) =>{
+    try {
+        const following = await User.findOne({username: args[0] })
+        if(!following){
+            return {message: 'No existe este perfil'}
+        }else{
+            return following;
+        }
+    } catch (error) {
+        
+    }
+}
+
   const generatePassword = async (password) => {
     return await new Promise((res, rej) => {
       bcrypt.hash(password, 10, (err, hash) => {
@@ -260,6 +273,8 @@ const updateOrDelete = async (user, args, operation) => {
           case "unfollow":
             return await unfollowUser(user, args);
             break;
+            case "profile":
+                return await showProfile(user, args)
           default:
             return { message: "Comando inválido, inténtalo de nuevo mas tarde" };
         }
