@@ -3,7 +3,7 @@ Twitter created with NodeJs
 # Instructions for Commands Use
 ```
 
--Modulo a accionar
+-Módulo a accionar
     >instrución de como se escribe en Postman
         >ejemplo de uso
 
@@ -29,7 +29,7 @@ Twitter created with NodeJs
     >follow username <br/>
         >follow jperez <br/>
 *********************************************
--dejar de seguir a alguién <br/>
+-Dejar de seguir a alguién <br/>
     >unfollow username <br/>
        >unfollow jperez <br/>
 *********************************************
