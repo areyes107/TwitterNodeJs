@@ -221,7 +221,9 @@ const updateOrDelete = async (user, args, operation) => {
 
   const showProfile = async (user, args) =>{
     try {
-        const following = await User.findOne({username: args[0] })
+        const following = await User.findOne({username: args[0] }).populate(
+            "following", "-following -password -followers -name -email",
+        ).populate("followers", "-followers -password -following -name -email")
         if(!following){
             return {message: 'No existe este perfil'}
         }else{
