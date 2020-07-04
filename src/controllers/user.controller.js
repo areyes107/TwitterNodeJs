@@ -162,7 +162,7 @@ const updateOrDelete = async (user, args, operation) => {
         if (alreadyFollowed)
           return { message: `ya sigues a: ${follow.username}` };
         else {
-          const addfollowing = await User.findByIdAndUpdate(
+          const addFollowing = await User.findByIdAndUpdate(
             user.sub,
             { $push: { following: follow } },
             { new: true }
