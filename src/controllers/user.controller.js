@@ -261,7 +261,7 @@ const updateOrDelete = async (user, args, operation) => {
             return await unfollowUser(user, args);
             break;
           default:
-            return { message: "Invalid command try again" };
+            return { message: "Comando inválido, inténtalo de nuevo mas tarde" };
         }
       }
     } catch (err) {
