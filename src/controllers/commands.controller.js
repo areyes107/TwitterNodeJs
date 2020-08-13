@@ -2,24 +2,22 @@ const { getAction } =require('twitter-command');
 
 const {
     signUp,
-    signIn,
+    login,
     followUser,
     unfollowUser,
     viewTweets,
-    profile,
+    showProfile,
   } = require("./user.controller");
 
   const {
     addTweet,
-    switchUpdateDelete,
-    like,
-    makeReply,
+    updateOrDelete,
   } = require("./tweet.controller");
 
   const commands = async (req, res) => {
     
     try {
-      res.send(await mapAction(req.user, TwitterCommand.getAction(req)));
+      res.send(await mapAction(req.user, getAction(req)));
     } catch (err) {
       console.log(err);
       res.status(500).send({ message: "Error en el servidor" });
