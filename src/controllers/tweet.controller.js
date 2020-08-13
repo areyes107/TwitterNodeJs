@@ -92,7 +92,7 @@ const updateOrDelete = async (user, args, operation) => {
     }
   }
 
-  const dislike = async ()=>{
+  const dislike = async (id, userId)=>{
     try {
       const disliked = await Reaction.findByIdAndUpdate({_id: id}, {$pull: {interactors: userId}, $inc:{likes: -1}})
 
@@ -130,8 +130,52 @@ const updateOrDelete = async (user, args, operation) => {
     }
   }
 
+  const reply = async (user, args) => {
+    try {
+      const reply = new Reply();
+      const findTweet = await Tweet.findById(args[1]);
+      if (!findTweet) return { message: "Este tweet no existe" };
+      else {
+        reply.author = user.sub;
+        reply.content = args[0];
+        const replyAdded = await reply.save();
+        if (!replyAdded) return { message: "Imposible guardar respuesta" };
+        else {
+          const addReply = await Tweet.findByIdAndUpdate(
+            findTweet._id,
+            {
+              $push: { replies: replyAdded._id },
+            },
+            { new: true }
+          )
+            .populate(
+              "creator",
+              "-_id -password -following -followers -name -email"
+            )
+            .populate("likes", "-_id -interactors")
+            .populate([
+              {
+                path: "replies",
+                select: "-_id",
+                populate: {
+                  path: "author",
+                  select: "-_id -password -following -followers -name -email",
+                },
+              },
+            ]);
+  
+          return !addReply ? { message: "unaggregated reply" } : addReply;
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      return { message: "Internal server error" };
+    }
+  };
+
   module.exports={
       addTweet,
       updateOrDelete,
-      like
+      like,
+      reply
   }
