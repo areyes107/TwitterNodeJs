@@ -959,9 +959,9 @@ mongoose-legacy-pluralize@1.0.2:
   integrity sha512-Yo/7qQU4/EyIS8YDFSeenIvXxZN+ld7YdV9LqFVQJzTLye8unujAWPZ4NWKfFA+RNjh+wvTWKY9Z3E5XM6ZZiQ==
 
 mongoose@^5.9.21:
-  version "5.9.28"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.9.28.tgz#07064fbbc224d7fc4616ce82b7ada0e8df788e9c"
-  integrity sha512-A8lNRk4eCQDzk+DagSMYdH94LAYrbTK83LgrUlzqdig3YXvizW3DApJqOWQ5DdhuimvsfiD0Z5NTVzXl/rgi2w==
+  version "5.9.29"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.9.29.tgz#1b6b3451bfcb8e037b53ae8490caeb655c37b557"
+  integrity sha512-lNkWoGdXkI7no3cTXHnHYcAhjB0j/kM5cmdLO07axcr8DVtTWz0ZOHsWMikUkWWbMmw4aOGejwR4WT3WvpJk1A==
   dependencies:
     bson "^1.1.4"
     kareem "2.3.1"
@@ -1590,9 +1590,9 @@ touch@^3.1.0:
     nopt "~1.0.10"
 
 twitter-command@^1.0.6:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/twitter-command/-/twitter-command-1.0.7.tgz#58cd6a24b0763ac1124bd658460fe7ea7c749fae"
-  integrity sha512-EryLT83o5+fpVhL+V8jRvXNFWS1M74R9ixse0Yddz+sur3l5b/TzNtosC1h4PVWip3GCiwPrj2jMhjJ/e6/Y+w==
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/twitter-command/-/twitter-command-1.0.8.tgz#1c7c6257465f16200f367b3f2c99f9ff50b2c35b"
+  integrity sha512-dtD4lq6CZJG/ka3cJUkpxhTWvbhbeMds+76I8LUzJnumlS+s6YGd5hn0ViKloXidf0vDifxeHOo33e1wWLx2KQ==
   dependencies:
     unbracket "^1.0.4"
 
