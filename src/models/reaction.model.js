@@ -3,7 +3,7 @@ const Schema = Mongoose.Schema;
 
 const ReactionSchema =Schema({
     interactors: [{type: Schema.Types.ObjectId, ref: 'user'}],
-    likes: {type: Schema.Types.ObjectId, ref: 'tweet'}
+    likes: {type: Number, default: 0}
 },
 {
     versionKey: false
