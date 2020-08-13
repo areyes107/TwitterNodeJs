@@ -12,6 +12,7 @@ const {
   const {
     addTweet,
     updateOrDelete,
+    like
   } = require("./tweet.controller");
 
   const commands = async (req, res) => {
@@ -57,7 +58,10 @@ const {
             return await unfollowUser(user, args);
             break;
             case "profile":
-                return await showProfile(user, args)
+                return await showProfile(user, args);
+                break
+            case "like_tweet":
+              return await like(user, args)
           default:
             return { message: "Comando inválido, inténtalo de nuevo mas tarde" };
         }
