@@ -62,69 +62,6 @@ const login = async (args) =>{
     }
 };
 
-const addTweet = async (user, args)=>{
-
-    try {
-       let tweet = new Tweet();
-       tweet.creator = user.sub;
-       tweet.date = new Date();
-       tweet.content = args[0];
-
-       const tweetAdded = await tweet.save();
-       if(!tweetAdded){
-           return {message: "Error al añadir el nuevo tweet"};
-
-       }else{
-           return {message: "Este es el tweet: " + tweetAdded};
-       }
-    }catch(err){
-        console.log(err);
-        return {message: "Error en el servidor"}    
-    }
-}
-
-const updateOrDelete = async (user, args, operation) => {
-    try {
-      let resultTweet;
-      let tweetFound;
-      if (operation === 0) {
-          tweetFound = await Tweet.findById(args[1]);
-      }else {
-          tweetFound = await Tweet.findById(args[0]);
-        }
-  
-      if (!tweetFound) {
-          return { message: "Este tweet no existe" };
-      }else {
-        if (String(user.sub) !== String(tweetFound.creator)) {
-          return { message: " Lo sentimos, no tienes acceso a este tweet" };
-        } else {
-          if (operation === 0) {
-            resultTweet = await Tweet.findByIdAndUpdate(
-              args[1],
-              { content: args[0] },
-              { new: true }
-            );
-          } else {
-            resultTweet = await Tweet.findByIdAndRemove(args[0]);
-          }
-          if (!resultTweet){
-            return { message: "Ha ocurrido un error, intenta de nuevo mas tarde" };
-          }else {
-            if (operation === 0) {
-                return resultTweet;
-            }else{
-                return { message: "Tweet eliminado" };
-            }
-          }
-        }
-      }
-    } catch (err) {
-      console.log(err);
-      return { message: "Error en el servidor" };
-    }
-  };
-
   const viewTweets = async (args) => {
     try {
       const userFind = await User.findOne({ username: args[0] });
@@ -243,60 +180,11 @@ const updateOrDelete = async (user, args, operation) => {
     });
   };
 
-  const mapAction = async (user, { command, args }) => {
-    try {
-      if (command === "invalid command") {
-          return { message: "Invalid command" };
-      }else if (args === "invalid arguments"){
-        return { message: "Invalid arguments" };
-      }else {
-        switch (command.toLowerCase()) {
-          case "register":
-            return await signUp(args);
-            break;
-          case "login":
-            return await login(args);
-            break;
-          case "add_tweet":
-            return await addTweet(user, args);
-            break;
-          case "edit_tweet":
-            return await updateOrDelete(user, args, 0);
-            break;
-          case "delete_tweet":
-            return await updateOrDelete(user, args, 1);
-            break;
-          case "view_tweets":
-            return await viewTweets(args);
-            break;
-          case "follow":
-            return await followUser(user, args);
-            break;
-          case "unfollow":
-            return await unfollowUser(user, args);
-            break;
-            case "profile":
-                return await showProfile(user, args)
-          default:
-            return { message: "Comando inválido, inténtalo de nuevo mas tarde" };
-        }
-      }
-    } catch (err) {
-      console.log(err);
-      return err;
-    }
-  };
-
-  const commands = async (req, res) => {
-    
-    try {
-      res.send(await mapAction(req.user, TwitterCommand.getAction(req)));
-    } catch (err) {
-      console.log(err);
-      res.status(500).send({ message: "Error en el servidor" });
-    }
-  };
-
   module.exports = {
-    commands
+    signUp,
+    login,
+    viewTweets,
+    followUser,
+    unfollowUser,
+    showProfile
   }
