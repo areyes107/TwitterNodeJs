@@ -2,7 +2,6 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user.model');
 const Tweet = require('../models/tweet.model');
 const jwt = require('../services/jwt');
-const TwitterCommand = require('twitter-command');
 
 
 const signUp = async (args) => {
