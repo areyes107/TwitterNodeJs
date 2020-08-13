@@ -6,17 +6,29 @@ const addTweet = async (user, args)=>{
 
     try {
        let tweet = new Tweet();
+       let reactions = new Reaction();
        tweet.creator = user.sub;
        tweet.date = new Date();
        tweet.content = args[0];
 
-       const tweetAdded = await tweet.save();
+       const saveReaction = await reactions.save(); 
+       if(!saveReaction){
+
+       }else{
+         tweet.likes = saveReaction._id;
+
+         const tweetAdded = await ( await tweet.save())
+         .populate("creator", "-password -following -followers -name -email")
+        .populate("likes", "-_id -interactors")
+        .execPopulate();
        if(!tweetAdded){
            return {message: "Error al añadir el nuevo tweet"};
 
        }else{
-           return {message: "Este es el tweet: " + tweetAdded};
+           return {message: "Este es el tweet: ", tweetAdded};
        }
+       }
+       
     }catch(err){
         console.log(err);
         return {message: "Error en el servidor"}    
@@ -65,7 +77,61 @@ const updateOrDelete = async (user, args, operation) => {
     }
   };
 
+  const makeLike  = async (id, userId)=>{
+    try {
+      const liked = await Reaction.findOneAndUpdate({_id: id }, {$push: {interactors: userId}, $inc: {likes: 1}});
+
+      if(!liked){
+        return {message: 'Error al querer darle like a este tweet'};
+      }else{
+        return {message: 'Le has dado like a este tweet'};
+      }
+    } catch (err) {
+      console.log(err);
+      return {message: 'Error en el servidor'};
+    }
+  }
+
+  const dislike = async ()=>{
+    try {
+      const disliked = await Reaction.findByIdAndUpdate({_id: id}, {$pull: {interactors: userId}, $inc:{likes: -1}})
+
+      if(!disliked){
+        return {message: 'No se encontró el tweet, no se pudo quitar el like'};
+        }else{
+          return {message: 'Has quitado tu like de este tweet'};
+      }
+    } catch (err) {
+      console.log(err);
+      return {message: 'Error en el servidor'};
+    }
+  }
+
+  const like = async (user, args)=>{
+    try {
+      const findTweet = await Tweet.findById(args[0])
+
+      if(!findTweet){
+        return {message: 'No  se ha encontrado el tweet'}
+      }else{
+        const preReactions = await Reaction.findOne({$and: [{ _id: findTweet.likes}, {interactors: { _id: user.sub}}]})
+
+        if(!preReactions){
+          const doLike = await Reaction.findById(findTweet.likes)
+          return await makeLike(doLike._id, user.sub);
+          
+        }else{
+          return await dislike(preReactions._id, user.sub); 
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      return {message: 'Error en el servidor'};
+    }
+  }
+
   module.exports={
       addTweet,
-      updateOrDelete
+      updateOrDelete,
+      like
   }
