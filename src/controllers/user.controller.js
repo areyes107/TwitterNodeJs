@@ -63,20 +63,36 @@ const login = async (args) =>{
 
   const viewTweets = async (args) => {
     try {
-      const userFind = await User.findOne({ username: args[0] });
-      if (!userFind)
-        return { message: "Este usuario no existe" };
-      else {
-        const tweets = await Tweet.find({ creator: userFind._id }).populate(
-          "creator",
-          "-_id username"
-        );
-        if (!tweets){ 
-            return { message: "Imposible obtener los tweets" };
-        }else if (tweets.length === 0){
-          return { message: `${userFind.username} aún no tienen ningún tweet.` };
-        }else{
-            return tweets;
+      if (args[0] === "*") {
+        const allTweets = await Tweet.find({})
+          .populate("creator", "-password -following -followers -name -email")
+          .populate("likes", "-_id -interactors")
+          .populate("replies", "-_id");
+        if (!allTweets) return { message: "No se encontró ningun tweet" };
+        else return allTweets;
+      } else {
+        const userFound = await User.findOne({ username: args[0] });
+        if (!userFound)
+          return { message: "Este usuario no existe" };
+        else {
+          const tweets = await Tweet.find({ creator: userFound._id })
+            .populate("creator", "username")
+            .populate("likes", "-_id -interactors")
+            .populate([
+              {
+                path: "replies",
+                select: "-_id",
+                populate: {
+                  path: "author",
+                  select: "-_id -password -following -followers -name -email",
+                },
+              },
+            ]);
+  
+          if (!tweets) return { message: "No se encontró ningún tweet" };
+          else if (tweets.length === 0)
+            return { message: `${userFound.username} Aun no tienes tweets.` };
+          else return tweets;
         }
       }
     } catch (err) {
