@@ -58,6 +58,7 @@ const updateOrDelete = async (user, args, operation) => {
               { new: true }
             );
           } else {
+            const deleteReactions = await Reaction.findByIdAndRemove( tweetFound.likes);
             resultTweet = await Tweet.findByIdAndRemove(args[0]);
           }
           if (!resultTweet){
