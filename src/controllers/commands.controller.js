@@ -72,7 +72,7 @@ const {
                 return await reply(user, args);
                 break; 
                 case "retweet":
-                  return await retweet(user, args)
+                  return await makeRetweet(user, args)
           default:
             return { message: "Comando inválido, inténtalo de nuevo mas tarde" };
         }
