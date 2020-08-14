@@ -55,11 +55,11 @@ le quiere dar dislike a un tweet que no tiene like, esto automáticamente provoc
         >like_tweet 5f3613c055017f37d440e00d <br/>
 *********************************************
 -Responder Tweet <br/>
-    >reply_tweet id [`never empty`] <br/>
+    >reply_tweet id [`always use[]`] <br/>
         >reply_tweet 5f3613c055017f37d440e00d [Me parece perfecto tu tweet] <br/>
 *********************************************
 -Retweet <br/>
-    >retweet id [`never empty`] <br/>
+    >retweet id [`always use[]`] <br/>
         >retweet 5f3613c055017f37d440e00d [chequen este tweet, tiene buena información] <br/>
 *********************************************
 -Ver los tweets de un usuario (`UPDATED`)<br/>
