@@ -16,6 +16,10 @@ const {
     reply
   } = require("./tweet.controller");
 
+  const{
+    makeRetweet
+  } = require('./retweet.controller');
+
   const commands = async (req, res) => {
     
     try {
@@ -62,10 +66,13 @@ const {
                 return await showProfile(user, args);
                 break;
             case "like_tweet":
-              return await like(user, args)
+              return await like(user, args);
               break;
               case "reply_tweet":
-                return await reply(user, args)
+                return await reply(user, args);
+                break; 
+                case "retweet":
+                  return await retweet(user, args)
           default:
             return { message: "Comando inválido, inténtalo de nuevo mas tarde" };
         }
