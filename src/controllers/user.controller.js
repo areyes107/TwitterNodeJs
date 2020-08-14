@@ -67,7 +67,17 @@ const login = async (args) =>{
         const allTweets = await Tweet.find({})
           .populate("creator", "-password -following -followers -name -email")
           .populate("likes", "-_id -interactors")
-          .populate("replies", "-_id");
+          .populate("replies", "-_id")
+          .populate([
+              {
+                path: "retweets",
+                select: "-_id",
+                populate: {
+                  path: "creator",
+                  select: "-_id -password -following -followers -name -email",
+                },
+              },
+            ]);
         if (!allTweets) return { message: "No se encontró ningun tweet" };
         else return allTweets;
       } else {
@@ -84,6 +94,15 @@ const login = async (args) =>{
                 select: "-_id",
                 populate: {
                   path: "author",
+                  select: "-_id -password -following -followers -name -email",
+                },
+              },
+            ]).populate([
+              {
+                path: "retweets",
+                select: "-_id",
+                populate: {
+                  path: "creator",
                   select: "-_id -password -following -followers -name -email",
                 },
               },
