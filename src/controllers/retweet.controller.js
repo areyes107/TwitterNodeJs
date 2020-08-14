@@ -11,8 +11,8 @@ try {
         const newRetweet = Retweet();
         newRetweet.creator = user.sub;
         if(args[0]!= ""){
-            newRetweet.comment = args[1];
-        } else{
+            newRetweet.comment = args[0];
+        } 
             const retweetAdded = await newRetweet.save()
             if(!retweetAdded){
                 return {message: 'No se pudo agregar el retweet'}
@@ -31,11 +31,20 @@ try {
                         select: "-_id -password -following -followers -name -email",
                       },
                     },
+                  ]).populate([
+                    {
+                      path: "retweets",
+                      select: "-_id",
+                      populate: {
+                        path: "creator",
+                        select: "-_id -password -following -followers -name -email",
+                      },
+                    },
                   ]);
                 return !updateTweet ? {message: 'El retweet no se pudo agreggar'} :updateTweet
             }
             
-        }
+        
     }
     
 } catch (err) {
