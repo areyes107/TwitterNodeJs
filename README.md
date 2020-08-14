@@ -45,3 +45,24 @@ Twitter created with NodeJs
     >login username password <br/>
         >login jperez 12345 <br/>
 *********************************************
+-Like Tweet <br/>
+    >like_tweet id <br/>
+        >like_tweet 5f3613c055017f37d440e00d <br/>
+*********************************************
+-Dislike Tweet (tiene la facilidad de que se puede ejecutar este comando usando Like_tweet, ya que así si se <br/>
+le quiere dar dislike a un tweet que no tiene like, esto automáticamente provoca que se de un like) <br/>
+    >like_tweet id <br/>
+        >like_tweet 5f3613c055017f37d440e00d <br/>
+*********************************************
+-Responder Tweet <br/>
+    >reply_tweet id [`never empty`] <br/>
+        >reply_tweet 5f3613c055017f37d440e00d [Me parece perfecto tu tweet] <br/>
+*********************************************
+-Retweet <br/>
+    >retweet id [`never empty`] <br/>
+        >retweet 5f3613c055017f37d440e00d [chequen este tweet, tiene buena información] <br/>
+*********************************************
+-Ver los tweets de un usuario (`UPDATED`)<br/>
+    >view_tweets username <br/>
+        >view_tweets jperez <br/>
+*********************************************
