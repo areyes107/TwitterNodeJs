@@ -132,13 +132,13 @@ const updateOrDelete = async (user, args, operation) => {
 
   const reply = async (user, args) => {
     try {
-      const reply = new Reply();
+      const newreply = new Reply();
       const findTweet = await Tweet.findById(args[1]);
       if (!findTweet) return { message: "Este tweet no existe" };
       else {
-        reply.author = user.sub;
-        reply.content = args[0];
-        const replyAdded = await reply.save();
+        newreply.author = user.sub;
+        newreply.content = args[0];
+        const replyAdded = await newreply.save();
         if (!replyAdded) return { message: "Imposible guardar respuesta" };
         else {
           const addReply = await Tweet.findByIdAndUpdate(
@@ -162,9 +162,18 @@ const updateOrDelete = async (user, args, operation) => {
                   select: "-_id -password -following -followers -name -email",
                 },
               },
+            ]).populate([
+              {
+                path: "retweets",
+                select: "-_id",
+                populate: {
+                  path: "creator",
+                  select: "-_id -password -following -followers -name -email",
+                },
+              },
             ]);
   
-          return !addReply ? { message: "unaggregated reply" } : addReply;
+          return !addReply ? { message: "Reply no agregado" } : addReply;
         }
       }
     } catch (err) {
